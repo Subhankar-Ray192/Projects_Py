@@ -14,14 +14,14 @@ class File:
 
 
  def dictInitialise(self,web,pasw,lvl,ch):
-  if(ch=="w"):
+  if(ch=="-w"):
    self.website["Website"]=web
   
    self.objE.lockText(pasw,lvl)
   
    self.website["Password"]=self.objE.psw
    self.website["Level"]=lvl
-  elif(ch=="r"):
+  elif(ch=="-r"):
    self.website["Website"]=web
   else:
    self.website["Website"]=web
@@ -40,11 +40,12 @@ class File:
     csvWriter=csv.DictWriter(file,fieldnames=passkeep)
     csvWriter.writerow(self.website) 
     
- def filterData(self,obj):
-  pathManager().unHideFiles("D:\\Password.txt")
-  obj.delete("D:\\Password.txt","D:\\tempFile.txt")
-  obj.delete("D:\\tempFile.txt","D:\\Password.txt")
-  pathManager().hideFile("D:\\Password.txt")
+ def filterData(self,obj,filePath,tempPath):
+  pathManager().unHideFiles(filePath)
+  obj.delete(filePath,tempPath)
+  obj.delete(tempPath,filePath)
+  pathManager().remTempFile(tempPath)
+  pathManager().hideFile(filePath)
  
  def delete(self,filePath,tempPath):
   with open(filePath,"r") as file: 
@@ -95,6 +96,7 @@ class pathManager:
             obj.write(filePath)
 
  def remTempFile(self,filePath):
+  os.remove(filePath)
   return
 
  def hideFile(self,filePath):
@@ -105,21 +107,43 @@ class pathManager:
   p=os.system("attrib -h "+filePath)
   return
  
-   
+class PasswordMan:
+ 
+ def __init__(self,choice):
+  self.objF=File()
+  self.objP=pathManager()
+  if(choice.__eq__("-w")):
+   self.store()
+  elif(choice.__eq__("-r")):
+   self.view()
+  elif(choice.__eq__("-f")):
+   self.remove()
+  else:
+   help()
+  return
+
+ def store(self):
+  print(1)
+  self.objF.dictInitialise(input("Website:"),getpass(),int(input("Level:")),"-w")
+  self.objP.isFileExist(self.objF,"D:\\Password.txt")
+  self.objP.hideFile("D:\\Password.txt")
+
+ def view(self):
+  print(2)
+  self.objF.dictInitialise(input("Website:"),"",0,"-r")
+  self.objF.read("D:\\Password.txt")
+  self.objP.hideFile("D:\\Password.txt")
+  return
+
+ def remove(self):
+  print(3)
+  self.objF.dictInitialise(input("Website:"),"",0,"-f")
+  self.objF.filterData(self.objF,"D:\\Password.txt","D:\\tempFile.txt")
+  return  
+     
 def main():
- pathManager().hideFile("D:\\Password.txt")
- choice=sys.argv[1]
- obj=File()
- if(choice=="w"):
-  obj.dictInitialise(input("Website:"),getpass(),int(input("Level:")),choice)
-  pathManager().isFileExist(obj,"D:\\Password.txt")
- elif(choice=="r"):
-  obj.dictInitialise(input("Website:"),"",0,choice)
-  obj.read("D:\\Password.txt")
- else:
-  obj.dictInitialise(input("Website:"),"",0,choice)
-  obj.filterData(obj)
-  
+ print(sys.argv[1])
+ PasswordMan(sys.argv[1])
    
 
 main()
