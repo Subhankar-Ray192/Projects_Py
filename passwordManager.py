@@ -6,6 +6,9 @@ from getpass import getpass
 
 passkeep=["Website","Password","Level"]
 
+dataFilePath="D:\\Password.txt"
+garbageFilePath="D:\\TempFile.txt"
+
 class File:
 
  def __init__(self):
@@ -158,31 +161,30 @@ class PasswordMan:
  def store(self):
   self.objF.dictInitialise(input("Website:"),getpass(),int(input("Level:")),"-w")
   self.objP.isFileExist(self.objF,"D:\\Password.txt")
-  self.objP.hideFile("D:\\Password.txt")
+  self.objP.hideFile(dataFilePath)
 
  def view(self):
   self.objF.dictInitialise(input("Website:"),"",0,"-r")
   self.objF.read("D:\\Password.txt")
-  self.objP.hideFile("D:\\Password.txt")
+  self.objP.hideFile(dataFilePath)
   return
 
  def remove(self):
   print(3)
   self.objF.dictInitialise(input("Website:"),"",0,"-f")
-  self.objF.filterData("D:\\Password.txt","D:\\tempFile.txt")
+  self.objF.filterData(dataFilePath,garbageFilePath)
   return
 
  def listingWeb(self):
-  self.objF.showWeb("D:\\Password.txt")
+  self.objF.showWeb(dataFilePath)
   return 
 
  def update(self):
   self.objF.dictInitialise(input("Website:"),getpass(),int(input("Level:")),"-u")
-  self.objF.updateRecord("D:\\Password.txt") 
+  self.objF.updateRecord(dataFilePath) 
   return
      
 def main():
- print(sys.argv[1])
  PasswordMan(sys.argv[1])
    
 
