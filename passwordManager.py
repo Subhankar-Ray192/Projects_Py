@@ -2,12 +2,29 @@ import sys
 import csv
 import os
 from getpass import getpass
+from pathlib import Path
 
 
 passkeep=["Website","Password","Level"]
 
 dataFilePath="D:\\Password.txt"
 garbageFilePath="D:\\TempFile.txt"
+
+
+class Clean:
+  
+  def __init__(self):
+   self.objF=File()
+   return
+  
+  def cleanUtility(self,filePath):
+   with open(filePath,"r") as file:
+    csvReader = csv.DictReader(file,fieldnames=passkeep)
+    for rows in csvReader:
+      if(rows[passkeep[0]]==""):
+       self.objF.filterData(filePath,garbageFilePath)
+   return
+
 
 class File:
 
@@ -48,7 +65,7 @@ class File:
    csvReader=csv.DictReader(file,fieldnames=passkeep)
    for row in csvReader:
     if(row[passkeep[0]]==self.updateWebsite[passkeep[0]]):
-      self.filterData(filePath,"D:\\tempFile.txt")
+      self.filterData(filePath,garbageFilePath)
       self.website[passkeep[0]]=self.updateWebsite[passkeep[0]]
       self.website[passkeep[1]]=self.updateWebsite[passkeep[1]]
       self.website[passkeep[2]]=self.updateWebsite[passkeep[2]]
@@ -118,14 +135,16 @@ class Encrypt:
 class pathManager:
  
  def __init__(self):
+  self.pathS=dataFilePath
   return
 
- def isFileExist(self,obj,filePath):
-  if (not os.path.exists(filePath)):
-            obj.erase(filePath)
-            obj.write(filePath)
-  else:
-            obj.write(filePath)
+ def pathChange():
+  return
+ 
+ def isFileExist(self,filePath):
+  if (os.path.exists(filePath)):
+       return True
+  return False
 
  def remTempFile(self,filePath):
   os.remove(filePath)
@@ -160,31 +179,46 @@ class PasswordMan:
 
  def store(self):
   self.objF.dictInitialise(input("Website:"),getpass(),int(input("Level:")),"-w")
-  self.objP.isFileExist(self.objF,"D:\\Password.txt")
+  if(self.objP.isFileExist(dataFilePath)):
+       self.objF.write(dataFilePath)
+  else:
+       self.objF.erase(dataFilePath)
+       self.objF.write(dataFilePath)
   self.objP.hideFile(dataFilePath)
 
  def view(self):
-  self.objF.dictInitialise(input("Website:"),"",0,"-r")
-  self.objF.read("D:\\Password.txt")
-  self.objP.hideFile(dataFilePath)
+  if(self.objP.isFileExist(dataFilePath)):
+      self.objF.dictInitialise(input("Website:"),"",0,"-r")
+      self.objF.read(dataFilePath)
+  else:
+      print("ER:Read")
   return
 
  def remove(self):
-  print(3)
-  self.objF.dictInitialise(input("Website:"),"",0,"-f")
-  self.objF.filterData(dataFilePath,garbageFilePath)
+  if(self.objP.isFileExist(dataFilePath)):
+    self.objF.dictInitialise(input("Website:"),"",0,"-f")
+    self.objF.filterData(dataFilePath,garbageFilePath)
+  else:
+    print("ER:D")
   return
 
  def listingWeb(self):
-  self.objF.showWeb(dataFilePath)
+  if(self.objP.isFileExist(dataFilePath)):
+    self.objF.showWeb(dataFilePath)
+  else:
+     print("ER:L")
   return 
 
  def update(self):
-  self.objF.dictInitialise(input("Website:"),getpass(),int(input("Level:")),"-u")
-  self.objF.updateRecord(dataFilePath) 
+  if(self.objP.isFileExist(dataFilePath)):
+    self.objF.dictInitialise(input("Website:"),getpass(),int(input("Level:")),"-u")
+    self.objF.updateRecord(dataFilePath) 
+  else:
+    print("ER:U")
   return
      
 def main():
+ Clean().cleanUtility(dataFilePath)
  PasswordMan(sys.argv[1])
    
 
