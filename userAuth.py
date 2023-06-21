@@ -4,8 +4,8 @@ import os
 from getpass import getpass
 import passwordManager as pM
 
-
-userAuthPath="D:\\Password_Manager_Root\\userAuth.txt"
+dirPath="D:\\Password_Manager_Root\\"
+userAuthPath=dirPath+"userAuth.txt"
 
 class UserAuth:
   
@@ -14,6 +14,10 @@ class UserAuth:
    self.objUF=UserFile(self.header)
    if(choice.__eq__("-n")):
     self.acceptNewUser()
+   elif(choice.__eq__("-ru")):
+    self.retrieveOld()
+   else:
+    x.pM.PasswordMan()
    return
 
   def acceptNewUser(self):
@@ -22,13 +26,18 @@ class UserAuth:
      self.userStore(x)
   
   def userStore(self,x):
-   self.objUF.authInitialise(sys.argv[2],getpass(prompt="Master-Key:"),sys.argv[1])
+   self.objUF.authInitialise(sys.argv[2],getpass(prompt="\nMaster-Key:"),sys.argv[1])
    if(x.objP.isFileExist(userAuthPath)):
      self.objUF.write(userAuthPath)  
    else:
      self.objUF.erase(userAuthPath)
      self.objUF.write(userAuthPath)
-
+   
+  def retrieveOld(self):
+    self.objUF.authInitialise(sys.argv[2],getpass(prompt="\nMaster-Key:"),sys.argv[1])
+    self.objUF.read(userAuthPath)
+    return  
+     
 class UserFile:
   
  def __init__(self,pmF):
@@ -42,31 +51,25 @@ class UserFile:
    self.userAuthName[self.fields[0]]=un
    self.userAuthName[self.fields[1]]=mkey
   else:
-   print("xx")
+   self.userAuthName[self.fields[0]]=un
+   self.userAuthName[self.fields[1]]=mkey
+   
+  return
 
  def read(self,filePath):
-  lvl=0
+  flag=0
   with open(filePath,"r") as file:
     csvReader=csv.DictReader(file,fieldnames=self.fields)
     for row in csvReader:
-      if(row[self.fields[0]]==self.website[self.fields[0]]):
-        self.objE.psw=row[self.fields[1]]
-        lvl=int(row[self.fields[2]])
-        break
-    return lvl,self.objE
+      if((row[self.fields[1]]==self.userAuthName[self.fields[1]])and(row[self.fields[0]]==self.userAuthName[self.fields[0]])): 
+        print("Master-Key:Matched--->Permission:Granted")
+        x=pM.PasswordMan(row[self.fields[0]],sys.argv[3])
+        flag=1
+  if(not flag):
+   print("Master-Key:Matched--->Permission:Denied")
+  return
 
- def updateRecord(self,filePath):
-  with open(filePath,"r") as file:
-   csvReader=csv.DictReader(file,fieldnames=self.fields)
-   for row in csvReader:
-    if(row[self.fields[0]]==self.updateWebsite[self.fields[0]]):
-      self.filterData(filePath,garbageFilePath)
-      self.website[self.fields[0]]=self.updateWebsite[self.fields[0]]
-      self.website[self.fields[1]]=self.updateWebsite[self.fields[1]]
-      self.website[self.fields[2]]=self.updateWebsite[self.fields[2]]
-      self.write(filePath)
-      
- 
+     
  def showWeb(self,filePath):
   print("\nWebsites:",end="")
   with open(filePath,"r") as file:
@@ -80,13 +83,6 @@ class UserFile:
   with open(filePath,"a",newline="",encoding="utf-8") as file:
     csvWriter=csv.DictWriter(file,fieldnames=self.fields)
     csvWriter.writerow(self.userAuthName) 
-    
- def filterData(self,filePath,tempPath):
-  pathManager().unHideFiles(filePath)
-  self.delete(filePath,tempPath)
-  self.delete(tempPath,filePath)
-  pathManager().remTempFile(tempPath)
-  pathManager().hideFile(filePath)
  
  def delete(self,filePath,tempPath):
   with open(filePath,"r") as file: 
