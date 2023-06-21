@@ -7,8 +7,9 @@ from pathlib import Path
 
 passkeep=["Website","Password","Level"]
 
-dataFilePath="D:\\Password.txt"
-garbageFilePath="D:\\TempFile.txt"
+directoryPath="D:\\Password_Manager_Root"
+dataFilePath=directoryPath+"\\Password.txt"
+garbageFilePath=directoryPath+"\\TempFile.txt"
 
 
 class CleanUtility:
@@ -23,6 +24,9 @@ class CleanUtility:
     for rows in csvReader:
       if(rows[passkeep[0]]==""):
        self.objF.filterData(filePath,garbageFilePath)
+   return
+
+  def cleanDir(self):
    return
 
 
@@ -79,6 +83,7 @@ class File:
    for row in csvReader:
      if(row[passkeep[0]]!=passkeep[0]):
        print(row[passkeep[0]],end=",")
+   print()
 
  def write(self,filePath):
   with open(filePath,"a",newline="",encoding="utf-8") as file:
@@ -142,6 +147,11 @@ class pathManager:
  def pathChange():
   return
  
+ def dirCreator(self,filePath):
+  if(not self.isFileExist(filePath)):
+   os.mkdir(filePath)
+  return
+ 
  def isFileExist(self,filePath):
   if (os.path.exists(filePath)):
        return True
@@ -164,6 +174,7 @@ class PasswordMan:
  def __init__(self,choice):
   self.objF=File()
   self.objP=pathManager()
+  self.objP.dirCreator(directoryPath)
   if(choice.__eq__("-w")):
    self.store()
   elif(choice.__eq__("-r")):
@@ -183,7 +194,7 @@ class PasswordMan:
   return
 
  def store(self):
-  self.objF.dictInitialise(input("Website:"),getpass(),int(input("Level:")),"-w")
+  self.objF.dictInitialise(input("\nWebsite:"),getpass(),int(input("Level:")),"-w")
   if(self.objP.isFileExist(dataFilePath)):
        self.objF.write(dataFilePath)
        self.clean()
@@ -195,7 +206,7 @@ class PasswordMan:
 
  def view(self):
   if(self.objP.isFileExist(dataFilePath)):
-      self.objF.dictInitialise(input("Website:"),"",0,"-r")
+      self.objF.dictInitialise(input("\nWebsite:"),"",0,"-r")
       self.objF.read(dataFilePath)
   else:
       print("\nFile-Read:(Failure)")
@@ -204,7 +215,7 @@ class PasswordMan:
 
  def remove(self):
   if(self.objP.isFileExist(dataFilePath)):
-    self.objF.dictInitialise(input("Website:"),"",0,"-f")
+    self.objF.dictInitialise(input("\nWebsite:"),"",0,"-f")
     self.objF.filterData(dataFilePath,garbageFilePath)
   else:
     print("\nFile-Record-Deletion:(Failure)")
@@ -221,7 +232,7 @@ class PasswordMan:
 
  def update(self):
   if(self.objP.isFileExist(dataFilePath)):
-    self.objF.dictInitialise(input("Website:"),getpass(),int(input("Level:")),"-u")
+    self.objF.dictInitialise(input("\nWebsite:"),getpass(),int(input("Level:")),"-u")
     self.objF.updateRecord(dataFilePath) 
   else:
     print("\nFile-Update-Record:(Failure)")
