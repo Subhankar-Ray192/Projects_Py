@@ -2,13 +2,12 @@ import sys
 import csv
 import os
 from getpass import getpass
-from pathlib import Path
 
 
 
 
 directoryPath="D:\\Password_Manager_Root"
-dataFilePath=directoryPath+"\\Password.txt"
+
 garbageFilePath=directoryPath+"\\TempFile.txt"
 
 
@@ -144,7 +143,7 @@ class Encrypt:
 class pathManager:
  
  def __init__(self):
-  self.pathS=dataFilePath
+  #self.pathS=dataFilePath
   return
 
  def pathChange():
@@ -174,7 +173,8 @@ class pathManager:
  
 class PasswordMan:
  
- def __init__(self,choice):
+ def __init__(self,choice,userName):
+  self.dataFilePath=directoryPath+"\\"+userName+".txt"
   self.header=["Website","Password","Level"]
   self.objF=File(self.header)
   self.objP=pathManager()
@@ -199,19 +199,19 @@ class PasswordMan:
 
  def store(self):
   self.objF.dictInitialise(input("\nWebsite:"),getpass(),int(input("Level:")),"-w")
-  if(self.objP.isFileExist(dataFilePath)):
-       self.objF.write(dataFilePath)
+  if(self.objP.isFileExist(self.dataFilePath)):
+       self.objF.write(self.dataFilePath)
        self.clean()
   else:
-       self.objF.erase(dataFilePath)
-       self.objF.write(dataFilePath)
+       self.objF.erase(self.dataFilePath)
+       self.objF.write(self.dataFilePath)
        self.clean()
-  self.objP.hideFile(dataFilePath)
+  self.objP.hideFile(self.dataFilePath)
 
  def view(self):
-  if(self.objP.isFileExist(dataFilePath)):
+  if(self.objP.isFileExist(self.dataFilePath)):
       self.objF.dictInitialise(input("\nWebsite:"),"",0,"-r")
-      lvl,objE=self.objF.read(dataFilePath)
+      lvl,objE=self.objF.read(self.dataFilePath)
       objE.unlockText(lvl)
   else:
       print("\nFile-Read:(Failure)")
@@ -219,43 +219,43 @@ class PasswordMan:
   return
 
  def remove(self):
-  if(self.objP.isFileExist(dataFilePath)):
+  if(self.objP.isFileExist(self.dataFilePath)):
     self.objF.dictInitialise(input("\nWebsite:"),"",0,"-f")
-    self.objF.filterData(dataFilePath,garbageFilePath)
+    self.objF.filterData(self.dataFilePath,garbageFilePath)
   else:
     print("\nFile-Record-Deletion:(Failure)")
     print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
   return
 
  def listingWeb(self):
-  if(self.objP.isFileExist(dataFilePath)):
-    self.objF.showWeb(dataFilePath)
+  if(self.objP.isFileExist(self.dataFilePath)):
+    self.objF.showWeb(self.dataFilePath)
   else:
      print("\nFiles-Listing:(Failure)")
      print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
   return 
 
  def update(self):
-  if(self.objP.isFileExist(dataFilePath)):
+  if(self.objP.isFileExist(self.dataFilePath)):
     self.objF.dictInitialise(input("\nWebsite:"),getpass(),int(input("Level:")),"-u")
-    self.objF.updateRecord(dataFilePath) 
+    self.objF.updateRecord(self.dataFilePath) 
   else:
     print("\nFile-Update-Record:(Failure)")
     print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
   return
 
  def clean(self):
-   if(self.objP.isFileExist(dataFilePath)):
-     CleanUtility(self.header).cleanEntry(dataFilePath)
+   if(self.objP.isFileExist(self.dataFilePath)):
+     CleanUtility(self.header).cleanEntry(self.dataFilePath)
    else:
      print("\nFiles-Clean:(Failure)")
      print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
    return
 
  def deleteFile(self):
-  if(self.objP.isFileExist(dataFilePath)):
-   self.objP.unHideFiles(dataFilePath)
-   self.objP.remTempFile(dataFilePath)
+  if(self.objP.isFileExist(self.dataFilePath)):
+   self.objP.unHideFiles(self.dataFilePath)
+   self.objP.remTempFile(self.dataFilePath)
    print("\nFile-Delete:(Success)")
   else:
    print("\nFile-Delete:(Failure)")
@@ -270,22 +270,3 @@ class PasswordMan:
    print("File-{x}:-{y}".format(x=op[i],y=opCode[i]))
 
 
-class UserAuth:
-  
-  def __init__(self):
-   self.header=["Username","MasterKey","Path"]
-   return
-
-  def acceptNewUser(self):
-   input=("\nUsername:")
-   getpass(prompt="Master-Key")
-   input=("File_Name:")
-   
-     
-def main():
-  try:
-    PasswordMan(sys.argv[1])
-  except:
-    PasswordMan("-m") 
-
-main()
