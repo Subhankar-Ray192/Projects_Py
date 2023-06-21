@@ -173,8 +173,8 @@ class pathManager:
  
 class PasswordMan:
  
- def __init__(self,choice,userName):
-  self.dataFilePath=directoryPath+"\\"+userName+".txt"
+ def __init__(self,userName,choice):
+  self.dataFilePath=directoryPath+"\\"+userName+"Password.txt"
   self.header=["Website","Password","Level"]
   self.objF=File(self.header)
   self.objP=pathManager()
