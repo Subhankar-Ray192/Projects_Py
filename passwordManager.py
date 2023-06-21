@@ -58,12 +58,15 @@ class File:
    self.website[self.fields[0]]=web
 
  def read(self,filePath):
+  lvl=0
   with open(filePath,"r") as file:
     csvReader=csv.DictReader(file,fieldnames=self.fields)
     for row in csvReader:
       if(row[self.fields[0]]==self.website[self.fields[0]]):
         self.objE.psw=row[self.fields[1]]
-        self.objE.unlockText(int(row[self.fields[2]]))
+        lvl=int(row[self.fields[2]])
+        break
+    return lvl,self.objE
 
  def updateRecord(self,filePath):
   with open(filePath,"r") as file:
@@ -208,7 +211,8 @@ class PasswordMan:
  def view(self):
   if(self.objP.isFileExist(dataFilePath)):
       self.objF.dictInitialise(input("\nWebsite:"),"",0,"-r")
-      self.objF.read(dataFilePath)
+      lvl,objE=self.objF.read(dataFilePath)
+      objE.unlockText(lvl)
   else:
       print("\nFile-Read:(Failure)")
       print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
@@ -264,6 +268,19 @@ class PasswordMan:
   print("\nOperations:[FLAGS]\n")
   for i in range(7):
    print("File-{x}:-{y}".format(x=op[i],y=opCode[i]))
+
+
+class UserAuth:
+  
+  def __init__(self):
+   self.header=["Username","MasterKey","Path"]
+   return
+
+  def acceptNewUser(self):
+   input=("\nUsername:")
+   getpass(prompt="Master-Key")
+   input=("File_Name:")
+   
      
 def main():
   try:
