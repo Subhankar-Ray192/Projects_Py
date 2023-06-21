@@ -69,16 +69,6 @@ class UserFile:
    print("Master-Key:Matched--->Permission:Denied")
   return
 
-     
- def showWeb(self,filePath):
-  print("\nWebsites:",end="")
-  with open(filePath,"r") as file:
-   csvReader=csv.DictReader(file,fieldnames=self.fields)
-   for row in csvReader:
-     if(row[self.fields[0]]!=self.fields[0]):
-       print(row[self.fields[0]],end=",")
-   print()
-
  def write(self,filePath):
   with open(filePath,"a",newline="",encoding="utf-8") as file:
     csvWriter=csv.DictWriter(file,fieldnames=self.fields)
