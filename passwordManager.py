@@ -11,13 +11,13 @@ dataFilePath="D:\\Password.txt"
 garbageFilePath="D:\\TempFile.txt"
 
 
-class Clean:
+class CleanUtility:
   
   def __init__(self):
    self.objF=File()
    return
   
-  def cleanUtility(self,filePath):
+  def cleanEntry(self,filePath):
    with open(filePath,"r") as file:
     csvReader = csv.DictReader(file,fieldnames=passkeep)
     for rows in csvReader:
@@ -73,11 +73,12 @@ class File:
       
  
  def showWeb(self,filePath):
+  print("\nWebsites:",end="")
   with open(filePath,"r") as file:
    csvReader=csv.DictReader(file,fieldnames=passkeep)
    for row in csvReader:
      if(row[passkeep[0]]!=passkeep[0]):
-       print(row[passkeep[0]],end="\n")
+       print(row[passkeep[0]],end=",")
 
  def write(self,filePath):
   with open(filePath,"a",newline="",encoding="utf-8") as file:
@@ -173,8 +174,12 @@ class PasswordMan:
    self.listingWeb()
   elif(choice.__eq__("-u")):
    self.update()
+  elif(choice.__eq__("-g")):
+   self.clean()
+  elif(choice.__eq__("-d")):
+   self.deleteFile()
   else:
-   help()
+   pass
   return
 
  def store(self):
@@ -216,10 +221,25 @@ class PasswordMan:
   else:
     print("ER:U")
   return
+
+ def clean(self):
+   if(self.objP.isFileExist(dataFilePath)):
+     CleanUtility().cleanEntry(dataFilePath)
+   else:
+     print("ER:C")
+   return
+
+ def deleteFile(self):
+  if(self.objP.isFileExist(dataFilePath)):
+   self.objP.unHideFiles(dataFilePath)
+   self.objP.remTempFile(dataFilePath)
+   print("Files-Deleted:(Success)")
+  else:
+   print("\nFiles-Deleted:(Failure)")
+   print("Error:File-Not-Found","\n\nPlease check the path & try again!")
      
 def main():
  try:
-  Clean().cleanUtility(dataFilePath)
   PasswordMan(sys.argv[1])
  except:
   print("EC")
