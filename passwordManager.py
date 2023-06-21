@@ -179,16 +179,18 @@ class PasswordMan:
   elif(choice.__eq__("-d")):
    self.deleteFile()
   else:
-   pass
+   self.manual()
   return
 
  def store(self):
   self.objF.dictInitialise(input("Website:"),getpass(),int(input("Level:")),"-w")
   if(self.objP.isFileExist(dataFilePath)):
        self.objF.write(dataFilePath)
+       self.clean()
   else:
        self.objF.erase(dataFilePath)
        self.objF.write(dataFilePath)
+       self.clean()
   self.objP.hideFile(dataFilePath)
 
  def view(self):
@@ -196,7 +198,8 @@ class PasswordMan:
       self.objF.dictInitialise(input("Website:"),"",0,"-r")
       self.objF.read(dataFilePath)
   else:
-      print("ER:Read")
+      print("\nFile-Read:(Failure)")
+      print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
   return
 
  def remove(self):
@@ -204,14 +207,16 @@ class PasswordMan:
     self.objF.dictInitialise(input("Website:"),"",0,"-f")
     self.objF.filterData(dataFilePath,garbageFilePath)
   else:
-    print("ER:D")
+    print("\nFile-Record-Deletion:(Failure)")
+    print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
   return
 
  def listingWeb(self):
   if(self.objP.isFileExist(dataFilePath)):
     self.objF.showWeb(dataFilePath)
   else:
-     print("ER:L")
+     print("\nFiles-Listing:(Failure)")
+     print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
   return 
 
  def update(self):
@@ -219,30 +224,40 @@ class PasswordMan:
     self.objF.dictInitialise(input("Website:"),getpass(),int(input("Level:")),"-u")
     self.objF.updateRecord(dataFilePath) 
   else:
-    print("ER:U")
+    print("\nFile-Update-Record:(Failure)")
+    print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
   return
 
  def clean(self):
    if(self.objP.isFileExist(dataFilePath)):
      CleanUtility().cleanEntry(dataFilePath)
    else:
-     print("ER:C")
+     print("\nFiles-Clean:(Failure)")
+     print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
    return
 
  def deleteFile(self):
   if(self.objP.isFileExist(dataFilePath)):
    self.objP.unHideFiles(dataFilePath)
    self.objP.remTempFile(dataFilePath)
-   print("Files-Deleted:(Success)")
+   print("\nFile-Delete:(Success)")
   else:
-   print("\nFiles-Deleted:(Failure)")
-   print("Error:File-Not-Found","\n\nPlease check the path & try again!")
+   print("\nFile-Delete:(Failure)")
+   print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
+ 
+ def manual(self):
+  op=["Write ","Read  ","Erase ","Update","Delete","List  ","Help  "]
+  opCode=["w","r","f","u","d","l","m"]
+  print("\nusage: passwordManager.py -[FLAGS]")
+  print("\nOperations:[FLAGS]\n")
+  for i in range(7):
+   print("File-{x}:-{y}".format(x=op[i],y=opCode[i]))
      
 def main():
  try:
   PasswordMan(sys.argv[1])
  except:
-  print("EC")
+  PasswordMan("-m")
    
 
 main()
