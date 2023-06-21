@@ -149,7 +149,7 @@ class pathManager:
  def remTempFile(self,filePath):
   os.remove(filePath)
   return
-
+ 
  def hideFile(self,filePath):
   p=os.system("attrib +h "+filePath)
   return
@@ -218,8 +218,11 @@ class PasswordMan:
   return
      
 def main():
- Clean().cleanUtility(dataFilePath)
- PasswordMan(sys.argv[1])
+ try:
+  Clean().cleanUtility(dataFilePath)
+  PasswordMan(sys.argv[1])
+ except:
+  print("EC")
    
 
 main()
