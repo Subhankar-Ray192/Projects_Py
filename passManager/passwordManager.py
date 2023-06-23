@@ -222,6 +222,7 @@ class PasswordMan:
   if(self.objP.isFileExist(self.dataFilePath)):
     self.objF.dictInitialise(input("\nWebsite:"),"",0,"-f")
     self.objF.filterData(self.dataFilePath,garbageFilePath)
+    print("\nFile-Record-Deletion:(Success)")
   else:
     print("\nFile-Record-Deletion:(Failure)")
     print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
@@ -263,18 +264,18 @@ class PasswordMan:
  
  def manual(self):
   user_acc=["New-User     ","Existing-User","Delete-User  "]
-  user_accCode=["n","ru","d"]
+  user_accCode=["n  -[w | m]","ru -[r | f | u | l | m]","d  -[None]"]
   
-  op=["Write ","Read  ","Erase ","Update","Delete","List  ","Help  "]
-  opCode=["w","r","f","u","d","l","m"]
+  op=["Write ","Read  ","Erase ","Update","List  ","Help  "]
+  opCode=["w","r","f","u","l","m"]
   
-  print("\nusage: userAuth.py -[TYPE] -[FLAGS]")
+  print("\nUsage: userAuth.py -[TYPE] -[FLAGS]")
   
   print("\nUser-Type:[Type]\n")
   for i in range(3):
    print("{x}:-{y}".format(x=user_acc[i],y=user_accCode[i]))
   
   print("\nManager-Operations:[FLAGS]\n")  
-  for i in range(7):
-   print("File-{x}:-{y}".format(x=op[i],y=opCode[i]))
+  for i in range(6):
+   print("Record-{x}:-{y}".format(x=op[i],y=opCode[i]))
 
