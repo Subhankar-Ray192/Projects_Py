@@ -130,7 +130,7 @@ class RPN:
 
   def output(self,e):
    self.getTokens(e.get()) 
-   print(self.num)
+   #print(self.num)
    e.delete(0,END)
    e.insert(0,Evaluation(self.num).result())
    
@@ -167,7 +167,6 @@ class RPN:
        else:
          self.st.push(x)
      else:
-       #print(self.tempVar)
        if(not self.isNull()):
         self.num.append(self.tempVar)
         self.tempVar=""
@@ -190,9 +189,9 @@ class RPN:
 
   def remove(self):
    while((self.st.peek()!=('('))or(self.st.isEmpty())):
-     print(self.st.peek())
+     #print(self.st.peek())
      self.num.append(self.st.delete())
-   print(self.st.delete())
+   #print(self.st.delete())
   
   def isPrecedence(self,x):
     if(x=='('):
@@ -260,7 +259,6 @@ class Evaluation:
           self.cleanUp(i)
           i=0
         i=i+1
-    print(self.exp)
     return self.exp
 
   def cleanUp(self,i):
