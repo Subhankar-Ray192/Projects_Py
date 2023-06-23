@@ -262,10 +262,19 @@ class PasswordMan:
    print("\nError:File-Not-Found","\nPlease check the file-path & try again!")
  
  def manual(self):
+  user_acc=["New-User     ","Existing-User","Delete-User  "]
+  user_accCode=["n","ru","d"]
+  
   op=["Write ","Read  ","Erase ","Update","Delete","List  ","Help  "]
   opCode=["w","r","f","u","d","l","m"]
-  print("\nusage: passwordManager.py -[FLAGS]")
-  print("\nOperations:[FLAGS]\n")
+  
+  print("\nusage: userAuth.py -[TYPE] -[FLAGS]")
+  
+  print("\nUser-Type:[Type]\n")
+  for i in range(3):
+   print("{x}:-{y}".format(x=user_acc[i],y=user_accCode[i]))
+  
+  print("\nManager-Operations:[FLAGS]\n")  
   for i in range(7):
    print("File-{x}:-{y}".format(x=op[i],y=opCode[i]))
 
