@@ -1,7 +1,7 @@
 import sys
 import csv
 import os
-from getpass import getpass
+import getpass
 import passwordManager as pM
 
 dirPath="D:\\Password_Manager_Root\\"
@@ -19,14 +19,17 @@ class UserAuth:
    else:
     x.pM.PasswordMan()
    return
-
+  
   def acceptNewUser(self):
    if(sys.argv[3]=="-w"):
-     x=pM.PasswordMan(sys.argv[2],sys.argv[3])
-     self.userStore(x)
+     username=input("\nUsername:")
+     try:
+       self.userStore(pM.PasswordMan(username,sys.argv[2]),sys.argv[2],username)
+     except:
+       self.userStore(pM.PasswordMan(username,"-m"),sys.argv[2],username)
   
-  def userStore(self,x):
-   self.objUF.authInitialise(sys.argv[2],getpass(prompt="\nMaster-Key:"),sys.argv[1])
+  def userStore(self,x,user):
+   self.objUF.authInitialise(user,getpass.getpass(prompt="\nMaster-Key:"),sys.argv[1])
    if(x.objP.isFileExist(userAuthPath)):
      self.objUF.write(userAuthPath)  
    else:
@@ -34,7 +37,7 @@ class UserAuth:
      self.objUF.write(userAuthPath)
    
   def retrieveOld(self):
-    self.objUF.authInitialise(sys.argv[2],getpass(prompt="\nMaster-Key:"),sys.argv[1])
+    self.objUF.authInitialise(input("\nUsername:"),getpass.getpass(prompt="\nMaster-Key:"),sys.argv[1])
     self.objUF.read(userAuthPath)
     return  
      
@@ -63,10 +66,13 @@ class UserFile:
     for row in csvReader:
       if((row[self.fields[1]]==self.userAuthName[self.fields[1]])and(row[self.fields[0]]==self.userAuthName[self.fields[0]])): 
         print("Master-Key:Matched--->Permission:Granted")
-        x=pM.PasswordMan(row[self.fields[0]],sys.argv[3])
+        try:
+          pM.PasswordMan(row[self.fields[0]],sys.argv[2])
+        except:
+          pM.PasswordMan(row[self.fields[0]],"-m")
         flag=1
   if(not flag):
-   print("Master-Key:Matched--->Permission:Denied")
+   print("Master-Key:Mismatched--->Permission:Denied")
   return
 
  def write(self,filePath):

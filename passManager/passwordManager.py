@@ -198,7 +198,7 @@ class PasswordMan:
   return
 
  def store(self):
-  self.objF.dictInitialise(input("\nWebsite:"),getpass(),int(input("Level:")),"-w")
+  self.objF.dictInitialise(input("\nWebsite:"),getpass(),(int(input("Level:")))%5,"-w")
   if(self.objP.isFileExist(self.dataFilePath)):
        self.objF.write(self.dataFilePath)
        self.clean()
@@ -237,7 +237,7 @@ class PasswordMan:
 
  def update(self):
   if(self.objP.isFileExist(self.dataFilePath)):
-    self.objF.dictInitialise(input("\nWebsite:"),getpass(),int(input("Level:")),"-u")
+    self.objF.dictInitialise(input("\nWebsite:"),getpass(),(int(input("Level:")))%5,"-u")
     self.objF.updateRecord(self.dataFilePath) 
   else:
     print("\nFile-Update-Record:(Failure)")
@@ -268,5 +268,4 @@ class PasswordMan:
   print("\nOperations:[FLAGS]\n")
   for i in range(7):
    print("File-{x}:-{y}".format(x=op[i],y=opCode[i]))
-
 
