@@ -92,6 +92,14 @@ class File:
      if((row[self.fields[0]] == self.website[self.fields[0]]) and (self.isHeader(row))):
       return True
   return False  
+
+ def searchUpdate(self , filePath):
+  with open(filePath , "r") as file:
+    csvReader = csv.DictReader(file , fieldnames = self.fields)
+    for row in csvReader:
+     if((row[self.fields[0]] == self.updateWebsite[self.fields[0]]) and (self.isHeader(row))):
+      return True
+  return False 
     
  def filterData(self ,filePath , tempPath):
   pathManager().unHideFiles(filePath)
@@ -163,8 +171,8 @@ class pathManager:
  
 class PasswordMan:
  
- def __init__(self , userName , choice):
-  self.dataFilePath = directoryPath + "\\" + userName + "Password.txt"
+ def __init__(self , dirPath,userName , choice):
+  self.dataFilePath = dirPath + "\\" + userName + "Password.txt"
   self.header = ["Website" , "Password" , "Level"]
   self.objF = File(self.header)
   self.objP = pathManager()
@@ -214,6 +222,7 @@ class PasswordMan:
   else:
     print("\nFile-Record-Deletion:(Failure)")
     print("\nError:File-Not-Found")
+
  def listingWeb(self):
   if(self.objP.isFileExist(self.dataFilePath)):
     self.objF.showWeb(self.dataFilePath)
@@ -223,7 +232,7 @@ class PasswordMan:
 
  def update(self):
   self.objF.dictInitialise(input("\nWebsite:") , getpass() , (int(input("Level:")))%5 , "-u")
-  if((self.objP.isFileExist(self.dataFilePath)) and (self.objF.search(self.dataFilePath))):
+  if((self.objP.isFileExist(self.dataFilePath)) and (self.objF.searchUpdate(self.dataFilePath))):
     self.objF.updateRecord(self.dataFilePath) 
   else:
     print("\nFile-Update-Record:(Failure)")

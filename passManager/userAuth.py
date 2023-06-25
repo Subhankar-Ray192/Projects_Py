@@ -4,10 +4,24 @@ import os
 import getpass
 import passwordManager as pM
 
-dirPath = "D:\\Password_Manager_Root\\"
+
+
+def isDriveExist(drive):
+ for i in drive:
+   if(os.path.exists(i+":\\")):
+    print("\nDrive:Located-Successfully")
+    return i
+ print("\nError:Drive Not Found? Restart..")
+ sys.exit(0)
+
+drives=["B","D","E","F"]
+
+selDrv=isDriveExist(drives)
+dirPath = selDrv+":\\Password_Manager_Root\\"
 
 userAuthPath = dirPath+"userAuth.txt"
 userTempPath = dirPath+"userAuthTemp.txt"
+  
 
 class UserAuth:
   
@@ -21,15 +35,22 @@ class UserAuth:
    elif(choice.__eq__("-d")):
     self.delUser()
    else:
-    pM.PasswordMan()
+    pM.PasswordMan(dirPath,"",-m)
   
   def acceptNewUser(self):
    if(sys.argv[2] == "-w"):
      username=input("\nUsername:")
      try:
-       self.userStore(pM.PasswordMan(username , sys.argv[2]) , username)
+       self.userStore(pM.PasswordMan(dirPath,username , sys.argv[2]) , username)
      except:
-       self.userStore(pM.PasswordMan(username , "-m") , username)
+       print("\nFile-Operation:(Failed)--->Permission:Denied")
+       print("\nPlease refer command manual:")
+       self.userStore(pM.PasswordMan(dirPath,username , "-m") , username)
+   else:
+    print("\nFile-Operation:(Failed)--->Permission:Denied")
+    print("\nPlease refer command manual:")
+    self.userStore(pM.PasswordMan(dirPath,username , "-m") , username)
+  
   
   def userStore(self, passManObj, user):
    self.objUF.authInitialise(user , getpass.getpass(prompt="\nMaster-Key:"))
@@ -42,19 +63,29 @@ class UserAuth:
   def retrieveOld(self):
    if(sys.argv[2] != "-d"):
     self.objUF.authInitialise(input("\nUsername:") , getpass.getpass(prompt = "\nMaster-Key:"))
-    self.objUF.read(userAuthPath)
+    try:
+       self.objUF.read(userAuthPath)
+    except:
+       print("\nFile-Search:(Failure)")
+       print("\nError:File-Search-Incomplete")
+       print("\nPlease refer command manual:")
+       pM.PasswordMan(dirPath,"","-m")
    else:
     print("\nFile-Deletion:(Failed)--->Permission:Denied")
     print("\nPlease refer command manual:")
-    pM.PasswordMan("","-m")
+    pM.PasswordMan(dirPath,"","-m")
 
   def delUser(self):
+   try:
      self.objUF.authInitialise(input("\nUsername:") , getpass.getpass(prompt = "\nMaster-Key:"))
      self.objUF.delFile(userAuthPath)
      self.objUF.delEntry(userAuthPath , userTempPath)
      self.objUF.delEntry(userTempPath , userAuthPath)
      pM.pathManager().remTempFile(userTempPath)
-
+   except:
+    print("\nFile-Deletion:(Failed)--->Permission:Denied")
+    print("\nPlease refer command manual:")
+    pM.PasswordMan(dirPath,"","-m")
 
 class UserFile:
   
@@ -77,9 +108,9 @@ class UserFile:
         flag = 1
         print("Master-Key:Matched--->Permission:Granted")
         try:
-          pM.PasswordMan(row[self.fields[0]],sys.argv[2])
+          pM.PasswordMan(dirPath,row[self.fields[0]],sys.argv[2])
         except:
-          pM.PasswordMan(row[self.fields[0]],"-m")
+          pM.PasswordMan(dirPath,row[self.fields[0]],"-m")
   
   if(not flag):
    print("Master-Key:Mismatched--->Permission:Denied")
@@ -106,9 +137,9 @@ class UserFile:
         flag = 1
         print("Master-Key:Matched--->Permission:Granted") 
         try:
-          pM.PasswordMan(row[self.fields[0]],sys.argv[1])
+          pM.PasswordMan(dirPath,row[self.fields[0]],sys.argv[1])
         except:
-          pM.PasswordMan(row[self.fields[0]],"-m")
+          pM.PasswordMan(dirPath,row[self.fields[0]],"-m")
         
   if(not flag):
    print("Master-Key:Mismatched--->Permission:Denied")
@@ -132,4 +163,4 @@ if __name__=="__main__":
   try:
     UserAuth(sys.argv[1])
   except:
-    pM.PasswordMan("","-m")
+    pM.PasswordMan(dirPath,"","-m")
