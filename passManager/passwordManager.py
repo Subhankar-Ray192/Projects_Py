@@ -436,6 +436,9 @@ class UserFile:
     csvWriter.writeheader()
 
 if __name__=="__main__":
-    UserAuth(sys.argv[1])
+   try:
+     UserAuth(sys.argv[1])
+   except:
+     PasswordMan(dirPath,"","-m")
 
 
