@@ -86,12 +86,18 @@ class File:
       
  
  def showWeb(self , filePath):
+  nxtLine=1
   print("\nWebsites:" , end="")
   with open(filePath , "r") as file:
    csvReader = csv.DictReader(file , fieldnames = self.fields)
    for row in csvReader:
      if(row[self.fields[0]] != self.fields[0]):
-       print(row[self.fields[0]] , end=",")
+       if(nxtLine<11):
+         print(row[self.fields[0]] , end=",")
+         nxtLine=nxtLine+1
+       else:
+         print(row[self.fields[0]] , end=".\n\t ")
+         nxtLine=1
    print()
 
  def write(self , filePath):
