@@ -211,7 +211,6 @@ class PasswordMan:
  def store(self):
   self.objF.dictInitialise(input("\nWebsite:") , getpass() , (int(input("Level:")))%5 , "-w")
   if(self.objP.isFileExist(self.dataFilePath)):
-       print(2)
        self.objF.write(self.dataFilePath)
        self.clean()
   else:
