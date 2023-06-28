@@ -1,4 +1,5 @@
 import sqlite3
+import re
 import shutil
 import os
 import os
@@ -10,9 +11,9 @@ import math
 
 
 
-domainExtensions = ["com","org","net","co","us","edu",""]
-protocol = ["https","ftp","http","smtp",""]
-domainName=["google","youtube","facebook","instagram","whatsapp",""]
+domainExtensions = ["com","org","net","us","edu"]
+protocol = ["https","mail","http","account"]
+domainNames=["google","youtube","facebook","instagram","whatsapp"]
 
 queryTitle = "'%%'" 
 
@@ -58,7 +59,7 @@ class LinkParser:
   def __init__(self):
    return
   
-  def base_url(self,url, with_path=False):
+  def baseURL(self,url, with_path=False):
     parsed = urllib.parse.urlparse(url)
     path   = '/'.join(parsed.path.split('/')[:-1]) if with_path else ''
     parsed = parsed._replace(path=path)
@@ -70,21 +71,11 @@ class LinkParser:
 class Query:
   
   def __init__(self):
-   self.queryUrl = []
+   self.queryURL="'%%'"
+   self.url={""}
    self.objT = Time()
    self.objL = LinkParser()
    return
-  
-  def assignQuery(self,webList):
-   for i in webList:
-     self.queryUrl.append("'%{}%'".format(i))
-  
-  def showQuery(self):
-   for i in self.queryUrl:
-     print(i)
-  
-  def constData(self):
-   return len(self.queryUrl),self.fetchQuery(len(self.queryUrl)-1)
   
   def sqlQuery(self,time_from,time_to,title,url):
    
@@ -107,12 +98,15 @@ class Query:
     fetch_result = c.fetchall()
     return fetch_result
   
-  def fetchQuery(self,index):
+  def fetchQuery(self):
     time_from,time_to = self.objT.timeRangeSet(dt_From,dt_To, tz)
-    fetch_result = self.sqlQuery(time_from, time_to, queryTitle, self.queryUrl[index])
+    fetch_result = self.sqlQuery(time_from, time_to, queryTitle, self.queryURL)
   
-    #print(f"{len(fetch_result)} results...")
-    return len(fetch_result)
+    for i in fetch_result:
+      self.url.add(self.objL.baseURL(i[1]))
+      #print(self.url)
+    
+    return len(self.url),self.url
     
 
 class Visualize:
@@ -128,43 +122,54 @@ class Visualize:
 class Statistics:
  
   def __init__(self):
-   self.objQ= Query()
-   self.objV= Visualize()
+   self.objQ = Query()
+   self.objV = Visualize()
    return
   
   def staticQueryDetails(self):
-   self.objQ.showQuery()
    print(f"Query chrome history")
    print(f"From: {self.objQ.objT.dtToString(dt_From)}, To: {self.objQ.objT.dtToString(dt_To)}")
    print(f"Title: --")
-  
-  def dynamicQueryDetails(self,index,label):
-   print(f"url: {label[index]}")
     
-  def genDataSet(self,header):
+  def genDataDE(self):
    specific_result = []
-   self.objQ.assignQuery(header)
    
-   sum=0
-   count,total_result = self.objQ.constData()
-   label = header[0:count-1]
-   label.append("others")
+   count,url = self.objQ.fetchQuery() 
    
-   for i in range(count-1):
-     self.dynamicQueryDetails(i,label)
-     sum = sum+self.objQ.fetchQuery(i)
-     specific_result.append((self.objQ.fetchQuery(i)//total_result)*100)    
+   for i in domainExtensions:
+     sum=0
+     for j in url:
+       if(re.findall(i+"$",j)):
+         print("Yes",(i+j))
+         sum=sum+1
+     specific_result.append(int((sum/count)*100))
+    
+   print(specific_result)
+   self.objV.drawPieChart(specific_result,domainExtensions)
+
+  def genDataDN(self):
+   specific_result = []
    
-   self.dynamicQueryDetails(count-1,label)
-   specific_result.append(1)  
-   self.objV.drawPieChart(specific_result,label)
+   count,url = self.objQ.fetchQuery() 
+   
+   for i in domainNames:
+     sum=0
+     for j in url:
+       if(re.findall(i,j)):
+         print("Yes",(i+j))
+         sum=sum+1
+     specific_result.append(int((sum/count)*100))
+    
+   print(specific_result)
+   self.objV.drawPieChart(specific_result,domainNames)
+
 
 def main():
  
  objS = Statistics()
  objS.staticQueryDetails()
- objS.genDataSet(domainExtensions)
- #objS.genDataSet(domainName)
+ objS.genDataDE()
+ #objS.genDataDN()
  
  #percent=(specific_result/total_result)*100
  #print("Percent:{0:.2f}%".format(percent))
