@@ -11,9 +11,9 @@ import math
 
 
 
-domainExtensions = ["com","org","net","us","edu"]
-protocol = ["https","mail","http","account"]
-domainNames=["google","youtube","facebook","instagram","whatsapp"]
+domainExtensions = ["com","org","net","us","edu","..."]
+protocol = ["https","mail","account","..."]
+domainNames=["google","youtube","facebook","instagram","whatsapp","..."]
 
 queryTitle = "'%%'" 
 
@@ -133,43 +133,53 @@ class Statistics:
     
   def genDataDE(self):
    specific_result = []
-   
    count,url = self.objQ.fetchQuery() 
-   
    for i in domainExtensions:
-     sum=0
+     sum=1
      for j in url:
        if(re.findall(i+"$",j)):
          print("Yes",(i+j))
          sum=sum+1
-     specific_result.append(int((sum/count)*100))
-    
+     count=count+1
+     specific_result.append(sum)
    print(specific_result)
    self.objV.drawPieChart(specific_result,domainExtensions)
 
   def genDataDN(self):
    specific_result = []
-   
    count,url = self.objQ.fetchQuery() 
-   
    for i in domainNames:
-     sum=0
+     sum=1
      for j in url:
        if(re.findall(i,j)):
          print("Yes",(i+j))
          sum=sum+1
-     specific_result.append(int((sum/count)*100))
-    
+     count=count+1
+     specific_result.append(sum) 
    print(specific_result)
    self.objV.drawPieChart(specific_result,domainNames)
-
+  
+  
+  def genDataP(self):
+   specific_result = []
+   count,url = self.objQ.fetchQuery() 
+   for i in protocol:
+     sum=1
+     for j in url:
+       if(re.findall(i,j)):
+         print("Yes",(i+j))
+         sum=sum+1
+     specific_result.append(sum)
+   print(specific_result)
+   self.objV.drawPieChart(specific_result,protocol)
 
 def main():
  
  objS = Statistics()
  objS.staticQueryDetails()
- objS.genDataDE()
+ #objS.genDataDE()
  #objS.genDataDN()
+ objS.genDataP()
  
  #percent=(specific_result/total_result)*100
  #print("Percent:{0:.2f}%".format(percent))
