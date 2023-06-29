@@ -2,7 +2,6 @@ import sqlite3
 import re
 import shutil
 import os
-import os
 import sys
 import urllib.parse
 from datetime import datetime,timedelta
