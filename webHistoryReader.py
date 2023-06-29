@@ -106,6 +106,9 @@ class Query:
       #print(self.url)
     
     return len(self.url),self.url
+  
+  def removeFile(self):
+   return
     
 
 class Visualize:
@@ -119,7 +122,7 @@ class Visualize:
   plot.legend(title=givenTitle, loc='center left', bbox_to_anchor=(-0.1, .1))
   plot.axis('equal')
   plot.show()
- 
+  
 class Statistics:
  
   def __init__(self):
@@ -173,6 +176,10 @@ class Statistics:
      specific_result.append(sum)
    print(specific_result)
    self.objV.drawPieChart(specific_result,protocol,"protocol:")
+  
+  def manual(self):
+   return
+    
 
 def main():
  
@@ -183,11 +190,9 @@ def main():
    objS.genDataDE()
  elif(sys.argv[1]=="-nam"):
    objS.genDataDN()
- else:
+ elif(sys.argv[1]=="-prt")
    objS.genDataP()
- 
- #percent=(specific_result/total_result)*100
- #print("Percent:{0:.2f}%".format(percent))
+ else:
+   objS.manual()
 
- 
 main() 
