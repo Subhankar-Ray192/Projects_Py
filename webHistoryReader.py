@@ -10,9 +10,9 @@ import math
 
 
 
-domainExtensions = ["com","org","net","us","edu","..."]
-protocol = ["https","mail","account","..."]
-domainNames=["google","youtube","facebook","instagram","whatsapp","..."]
+domainExtensions = ["com","org","net","us","edu"]
+protocol = ["www","mail","account","in","chat"]
+domainNames=["google","youtube","facebook","instagram","whatsapp"]
 
 queryTitle = "'%%'" 
 
@@ -113,9 +113,11 @@ class Visualize:
  def __init(self):
   return
  
- def drawPieChart(self,dataset,labelSet):
-  plot.pie(dataset, labels = labelSet)
-  plot.legend(title="domain_extension")
+ def drawPieChart(self,dataset,labelSet,givenTitle):
+  plot.pie(dataset, labels = labelSet, autopct = '%1.1f%%', radius = 2)
+  plot.title("Chrome:History_Analyzer", pad = 32, loc = "left")
+  plot.legend(title=givenTitle, loc='center left', bbox_to_anchor=(-0.1, .1))
+  plot.axis('equal')
   plot.show()
  
 class Statistics:
@@ -142,7 +144,7 @@ class Statistics:
      count=count+1
      specific_result.append(sum)
    print(specific_result)
-   self.objV.drawPieChart(specific_result,domainExtensions)
+   self.objV.drawPieChart(specific_result,domainExtensions,"domain_extensions:")
 
   def genDataDN(self):
    specific_result = []
@@ -156,7 +158,7 @@ class Statistics:
      count=count+1
      specific_result.append(sum) 
    print(specific_result)
-   self.objV.drawPieChart(specific_result,domainNames)
+   self.objV.drawPieChart(specific_result,domainNames,"domain_names:")
   
   
   def genDataP(self):
@@ -165,20 +167,24 @@ class Statistics:
    for i in protocol:
      sum=1
      for j in url:
-       if(re.findall(i,j)):
+       if(re.findall("https://"+i,j)):
          print("Yes",(i+j))
          sum=sum+1
      specific_result.append(sum)
    print(specific_result)
-   self.objV.drawPieChart(specific_result,protocol)
+   self.objV.drawPieChart(specific_result,protocol,"protocol:")
 
 def main():
  
  objS = Statistics()
  objS.staticQueryDetails()
- #objS.genDataDE()
- #objS.genDataDN()
- objS.genDataP()
+ 
+ if(sys.argv[1]=="-ext"):
+   objS.genDataDE()
+ elif(sys.argv[1]=="-nam"):
+   objS.genDataDN()
+ else:
+   objS.genDataP()
  
  #percent=(specific_result/total_result)*100
  #print("Percent:{0:.2f}%".format(percent))
