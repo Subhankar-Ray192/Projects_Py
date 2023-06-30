@@ -197,16 +197,19 @@ def main():
  pathManager().makeDirectory()
  objS = Statistics()
 
- if(sys.argv[1]=="-ext"):
-   objS.staticQueryDetails()
-   objS.genDataDE()
- elif(sys.argv[1]=="-nam"):
-   objS.staticQueryDetails()
-   objS.genDataDN()
- elif(sys.argv[1]=="-prt"):
-   objS.staticQueryDetails()
-   objS.genDataP()
- else:
-   objS.manual()
+ try:
+  if(sys.argv[1]=="-ext"):
+    objS.staticQueryDetails()
+    objS.genDataDE()
+  elif(sys.argv[1]=="-nam"):
+    objS.staticQueryDetails()
+    objS.genDataDN()
+  elif(sys.argv[1]=="-prt"):
+    objS.staticQueryDetails()
+    objS.genDataP()
+  else:
+    objS.manual()
+ except:
+     objS.manual()
 
 main() 
