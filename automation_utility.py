@@ -4,22 +4,36 @@ import subprocess
 class Network:
  
  def __init__(self):
+  self.wifi_row = ""
+  self.findcomponentInfo()
   return
  
- def status(self):
+ def findcomponentInfo(self):
   result = subprocess.run("netsh interface show interface", capture_output = True, text = True)
-  output = result.stdout.lower()
-  print(output)
-  if("wifi" in output and "connected" in output):
-   return True
-  elif("wifi" in output and "disconnected" in output):
-   return False
-  else:
-   print("Status:Unknown")
+  state = result.stdout.lower()
+  lines = state.splitlines()
+  
+  for line in lines:
+   if ("wi-fi" in line):
+    self.wifi_row = line
+    break
  
+ def showStatus(self):
+  print(self.wifi_row)
+  
+ def isEnable(self):
+  if ("enabled".__eq__(self.wifi_row.split()[0])):
+   return 1
+  return 0
+
+ def isConnect(self):
+  if ("connected".__eq__(self.wifi_row.split()[1])):
+   return 1
+  return 0 
+  
  def enable(self):
   enable_run = subprocess.run("netsh interface set interface \"wi-fi\" enable", capture_output = True)
-  print(enable_run.stdout)
+  #print(enable_run.stdout)
   
  def nearbySpt(self):
    scan_output =  subprocess.run(["netsh","wlan","show","network"], capture_output = True, text = True)
@@ -53,15 +67,40 @@ class Network:
   
   for i in profiles:
    print(i)
+ 
+ def connectionModule(self, choice):
+  status_flag = int(str(Network().isEnable()) + str(Network().isConnect()),2)
+  if((status_flag == 2) and (choice.__eq__("-de"))):
+   self.disable()
+   print("Disable:Successful")
+  elif((status_flag == 2) and (choice.__eq__("-c"))):
+   self.nearbySpt()
+   self.showP()
+   self.connect("\"Redmi Note 12 Pro 5G\"")
+  elif((status_flag == 0) and (choice.__eq__("-e"))):
+   self.enable()
+   print("\nEnable:Successful")
+  elif((status_flag == 3) and (choice.__eq__("-dc"))):
+   self.disconnect()
+  elif(choice.__eq__("-s")):
+   self.findcomponentInfo()
+   self.showStatus()
+  elif((status_flag == 3) and (choice.__eq__("-ci"))):
+   self.connectionInfo()
+  elif(choice.__eq__("-n")):
+   self.nearbySpt()
+  elif(choice.__eq__("-p")):
+   self.showP()
+  
+ def flagAccpt(self,x):
+   for i in x:
+    self.connectionModule(i)
 
 def main():
-  Network().status()
-  #Network().enable()
-  Network().nearbySpt()
-  #Network().connect("\"Redmi Note 12 Pro 5G\"")
-  Network().connectionInfo()
+  Network().flagAccpt(["-c"])
+  #Network().nearbySpt()
+  #Network().connect()
   #Network().disconnect()
-  #Network().disable()
-  Network().showP()
+  #Network().showP()
 
 main()
