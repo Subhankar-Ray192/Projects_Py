@@ -76,7 +76,7 @@ class Network:
   elif((status_flag == 2) and (choice.__eq__("-c"))):
    self.nearbySpt()
    self.showP()
-   self.connect("\"Redmi Note 12 Pro 5G\"")
+   self.connect(input("\nSSID:"))
   elif((status_flag == 0) and (choice.__eq__("-e"))):
    self.enable()
    print("\nEnable:Successful")
@@ -99,7 +99,7 @@ class Network:
 def main():
   Network().flagAccpt(["-c"])
   #Network().nearbySpt()
-  #Network().connect()
+  #Network().connect("\"Redmi Note 12 Pro 5G\"")
   #Network().disconnect()
   #Network().showP()
 
