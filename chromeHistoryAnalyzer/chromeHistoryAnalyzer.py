@@ -10,6 +10,7 @@ import math
 
 
 
+
 domainExtensions = ["com","org","net","us","edu"]
 protocol = ["www","mail","account","in","chat"]
 domainNames=["google","youtube","facebook","instagram","whatsapp"]
@@ -24,10 +25,11 @@ dt_To = datetime.now()
 dt_From = datetime.now()-timedelta(days=dayFactor*numberOfYrs)
 
 browserPath = "C:\\Users\\SUBHANKAR\\AppData\\Local\Google\\Chrome\\User Data\\Default\\History"
-directoryPath="D:\\History_Analyzer"
-tempPath = directoryPath+"\\chromrHistory_SS"
 
-
+directoryPath = "History_Analyzer"
+tempPath = "\\chrome_historySS"
+    
+tempPath = directoryPath + tempPath
 
 class Time:
  
@@ -136,45 +138,52 @@ class Statistics:
    
   def genDataDE(self):
    specific_result = []
-   count,url = self.objQ.fetchQuery() 
+   subDomainExtension = []
+   __,url = self.objQ.fetchQuery() 
    print("\nUnique-Websites:\n")
    for i in domainExtensions:
-     sum=1
+     sum=0
      for j in url:
        if(re.findall(i+"$",j)):
          print(j)
          sum=sum+1
-     count=count+1
-     specific_result.append(sum)
-   self.objV.drawPieChart(specific_result,domainExtensions,"domain_extensions:")
+     if(sum != 0):
+      specific_result.append(sum)
+      subDomainExtension.append(i)
+   self.objV.drawPieChart(specific_result,subDomainExtension,"domain_extensions:")
 
   def genDataDN(self):
    specific_result = []
-   count,url = self.objQ.fetchQuery() 
+   subDomainExtension = []
+   __,url = self.objQ.fetchQuery() 
    print("\nUnique-Websites:\n")
    for i in domainNames:
-     sum=1
+     sum=0
      for j in url:
        if(re.findall(i,j)):
          print(j)
          sum=sum+1
-     count=count+1
-     specific_result.append(sum) 
-   self.objV.drawPieChart(specific_result,domainNames,"domain_names:")
+     if(sum != 0):
+      specific_result.append(sum)
+      subDomainExtension.append(i)
+   self.objV.drawPieChart(specific_result,subDomainExtension,"domain_names:")
   
   
   def genDataP(self):
    specific_result = []
-   count,url = self.objQ.fetchQuery()
+   subDomainExtension = []
+   __,url = self.objQ.fetchQuery()
    print("\nUnique-Websites:\n") 
    for i in protocol:
-     sum=1
+     sum=0
      for j in url:
        if(re.findall("https://"+i,j)):
          print(j)
          sum=sum+1
-     specific_result.append(sum)
-   self.objV.drawPieChart(specific_result,protocol,"protocol:")
+     if(sum != 0):
+       specific_result.append(sum)
+       subDomainExtension.append(i)
+   self.objV.drawPieChart(specific_result,subDomainExtension,"protocol:")
   
   def manual(self):
    print("\nusage: [webHistoryReader.py] -[FLAGS]",", [FLAGS]: {-nam, -ext, -prt}")
@@ -185,31 +194,41 @@ class Statistics:
 class pathManager:
   
   def __init__(self):
-   return
+   return 
   
+  def isDriveExist(self):
+   global directoryPath
+   if(os.path.exists("D:\\")):
+     directoryPath = "D:\\" + directoryPath
+   else:
+     directoryPath = "B:\\" + directoryPath
+   self.makeDirectory()
+   
   def makeDirectory(self):
+   global tempPath
    if(not os.path.exists(directoryPath)):
     os.mkdir(directoryPath)
+   tempPath = directoryPath + "\\chrome_historySS"
 
 
 def main():
  
- pathManager().makeDirectory()
- objS = Statistics()
-
- try:
-  if(sys.argv[1]=="-ext"):
-    objS.staticQueryDetails()
-    objS.genDataDE()
-  elif(sys.argv[1]=="-nam"):
-    objS.staticQueryDetails()
-    objS.genDataDN()
-  elif(sys.argv[1]=="-prt"):
-    objS.staticQueryDetails()
-    objS.genDataP()
-  else:
-    objS.manual()
- except:
+  pathManager().isDriveExist()
+  objS = Statistics()
+  
+  try:
+   if(sys.argv[1]=="-ext"):
+     objS.staticQueryDetails()
+     objS.genDataDE()
+   elif(sys.argv[1]=="-nam"):
+     objS.staticQueryDetails()
+     objS.genDataDN()
+   elif(sys.argv[1]=="-prt"):
+     objS.staticQueryDetails()
+     objS.genDataP()
+   else:
      objS.manual()
+  except:
+   objS.manual()
 
 main() 
