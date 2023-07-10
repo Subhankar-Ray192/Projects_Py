@@ -1,5 +1,6 @@
 import psutil
 import subprocess
+import sys
 
 class Network:
  
@@ -19,7 +20,7 @@ class Network:
     break
  
  def showStatus(self):
-  print(self.wifi_row)
+  print("\n",self.wifi_row)
   
  def isEnable(self):
   if ("enabled".__eq__(self.wifi_row.split()[0])):
@@ -47,7 +48,6 @@ class Network:
  def connect(self,ssid):
    com = "netsh wlan connect name="+ ssid + " interface=\"wi-fi\""
    connect_result = subprocess.run(com, capture_output = True)
-   print("\n",connect_result.stdout.decode("utf-8").replace("\r\n","").replace("'",""))
  
  def disable(self):
   subprocess.run(["netsh","interface","set","interface","Wi-Fi","admin=disable"])
@@ -67,6 +67,10 @@ class Network:
   
   for i in profiles:
    print(i)
+
+ def deleteP(self,ssid):
+  command = "netsh wlan delete profile" + ssid
+  result = subprocess.run(command, capture_output = True)
  
  def connectionModule(self, choice):
   status_flag = int(str(Network().isEnable()) + str(Network().isConnect()),2)
@@ -76,31 +80,51 @@ class Network:
   elif((status_flag == 2) and (choice.__eq__("-c"))):
    self.nearbySpt()
    self.showP()
-   self.connect(input("\nSSID:"))
+   self.connect(input("\nHotspot:"))
+   print("\nConnect:Successful")
   elif((status_flag == 0) and (choice.__eq__("-e"))):
    self.enable()
    print("\nEnable:Successful")
   elif((status_flag == 3) and (choice.__eq__("-dc"))):
    self.disconnect()
+   print("\nDisconnect:Successful")
   elif(choice.__eq__("-s")):
    self.findcomponentInfo()
    self.showStatus()
   elif((status_flag == 3) and (choice.__eq__("-ci"))):
    self.connectionInfo()
+   print("\nConnection_Info_Fetch:Successful")
   elif(choice.__eq__("-n")):
    self.nearbySpt()
+   print("\nNearby_Spot:Successful")
   elif(choice.__eq__("-p")):
    self.showP()
+   print("Profile_Fetch:Successful")
+  elif(choice.__eq__("-d")):
+   self.deleteP(input("Hotspot:"))
+   print("Delete:Successful")
+  else:
+   self.guide()
+ 
+ def guide(self):
+  print("\nusage: automation.py -[FLAGS]")
+  print("\n[FLAGS]:[OPERATION]\n")
+  print("  e: enable wi-fi","\n  de: enable wi-fi","\n  c: connect wi-fi")
+  print("  dc: disconnect wi-fi","\n  ci: connection info","\n  s: wi-fi status")
+  print("  p: network profiles","\n  n: nearby hotspots","\n  d: delete profile-info")
+  print("  g: flag guide")
   
  def flagAccpt(self,x):
    for i in x:
     self.connectionModule(i)
 
+ def comParser(self):
+   command_list = sys.argv
+   command_list.pop(0)
+   self.flagAccpt(command_list)
+   
+ 
 def main():
-  Network().flagAccpt(["-c"])
-  #Network().nearbySpt()
-  #Network().connect("\"Redmi Note 12 Pro 5G\"")
-  #Network().disconnect()
-  #Network().showP()
+  Network().comParser()
 
 main()
