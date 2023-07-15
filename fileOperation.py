@@ -18,7 +18,8 @@ class Create:
   def write2(self):
    with open(self.path,"a") as file:
     csvWriter = csv.DictWriter(file, fieldnames = self.meta_data)
-    csvWriter.writerow(self.data_store)   
+    if(self.isHeader()):
+      csvWriter.writerow(self.data_store)   
   
   def insertKey(self):
    for i in self.meta_data:
@@ -32,8 +33,8 @@ class Create:
      
   def isHeader(self):
    for i in self.meta_data:
-     if i.__eq__(self.data_store[i]):
-       return False
+    if (i.__eq__(self.data_store[i])):
+      return False
    return True
   
   def create(self):
@@ -44,14 +45,32 @@ class Create:
     self.write2()
 
 class Read:
-  def __init__():
+  def __init__(self,hd,p):
+   self.meta_data = hd
+   self.path = p
    return
 
-  def read1(self):
-   return
+  def read1(self,dataset):
+   with open(self.path,"r") as file:
+    csvReader = csv.DictReader(file, fieldnames = self.meta_data)
+    for entry in csvReader:
+      counter = 0
+      for data in dataset:
+        if (entry[self.meta_data[counter]].__eq__(data)):
+          counter = counter + 1
+        else:
+          break
+      if(counter == len(dataset)):
+       print(entry)
 
   def read2(self):
    return
+
+  def isHeader(self):
+   for i in self.meta_data:
+    if (i.__eq__(self.data_store[i])):
+      return False
+   return True
 
 class Update:
   def __init__():
@@ -72,8 +91,9 @@ class Delete():
 
 def main():
   meta_data = ["Name","Age"]
-  test_data = ["Subhankar","19"]
+  test_data = ["Subhankar","25"]
   path = "D:\Test.txt"
   Create(meta_data,path,test_data).create()
+  Read(meta_data,path).read1(test_data1)
 
 main()
