@@ -49,18 +49,13 @@ class Read:
         self.path = p
         return
     
-    def read1(self,dataset):
+    def read1(self,category_counter,data):
         with open(self.path,"r") as file:
             csvReader = csv.DictReader(file, fieldnames = self.meta_data)
             for entry in csvReader:
-                counter = 0
-                for data in dataset:
-                    if (entry[self.meta_data[counter]].__eq__(data)):
-                        counter = counter + 1
-                    else:
-                        break
-                if(counter == len(dataset)):
+                if (entry[self.meta_data[category_counter-1]].__eq__(data)):
                     print(entry)
+            
 
     def read2(self):
         with open(self.path,"r") as file:
@@ -95,10 +90,18 @@ class Delete():
 def main():
   meta_data = ["Name","Age"]
   test_data = ["Subhankar","25"]
-  test_data1 = ["Subhankar","25"]
+  test_data1 = ["Subhankar","19"]
+  test_data2 = ["Subhankar","23"]
+  test_data3 = ["Subhankar","36"]
   path = "D:\Test.txt"
+  print("\nFile-Created")
   Create(meta_data,path,test_data).create()
-  #Read(meta_data,path).read1(test_data1)
+  Create(meta_data,path,test_data1).create()
+  Create(meta_data,path,test_data2).create()
+  Create(meta_data,path,test_data3).create()
+  print("\nReading specific")
+  Read(meta_data,path).read1(1,"Subhankar")
+  print("\nReading All")
   Read(meta_data,path).read2()
 
 main()
