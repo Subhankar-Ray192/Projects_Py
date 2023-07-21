@@ -20,6 +20,7 @@ class Create:
             csvWriter = csv.DictWriter(file, fieldnames = self.meta_data)
             if(self.isHeader()):
                 csvWriter.writerow(self.data_store)   
+    
     def insertKey(self):
         for i in self.meta_data:
             self.data_store[i] = None 
@@ -47,13 +48,12 @@ class Read:
     def __init__(self,hd,p):
         self.meta_data = hd
         self.path = p
-        return
     
     def read1(self,category_counter,data):
         with open(self.path,"r") as file:
             csvReader = csv.DictReader(file, fieldnames = self.meta_data)
             for entry in csvReader:
-                if (entry[self.meta_data[category_counter-1]].__eq__(data)):
+                if ((entry[self.meta_data[category_counter-1]].__eq__(data)) and (self.isHeader(entry))):
                     print(entry)
             
 
@@ -78,20 +78,54 @@ class Update:
         return
 
 class Delete():
-    def __init__():
+    def __init__(self,hd,p,fp):
+        self.meta_data = hd
+        self.path = p
+        self.filter_path = fp
         return  
+    
+    def delete1(self,category_counter,data):
+        self.filterReader(self.path,self.filter_path,category_counter,data)
+        self.delete2()
+        self.filterReader(self.filter_path,self.path,category_counter,data)
+        self.delete3(self.filter_path)
 
-    def delete1(self):
-        return
+    def filterReader(self,rd_path,wt_path,category_counter,data):
+        with open(rd_path,"r") as file:
+            csvReader = csv.DictReader(file, fieldnames = self.meta_data)
+            for entry in csvReader:
+                if ((not entry[self.meta_data[category_counter-1]].__eq__(data)) and (self.isHeader(entry))):
+                    self.filterWriter(wt_path,self.extractData(entry))
+    
+    def filterWriter(self,wt_path,dataset):
+        Create(self.meta_data,wt_path,dataset).create()
+
+    def extractData(self,dataset):
+        data = []
+        for i in dataset.values():
+            data.append(i)
+        return data
 
     def delete2(self):
-        return
+        with open(self.path,"w") as file:
+            csvWriter = csv.DictWriter(file, fieldnames = self.meta_data)
+            csvWriter.writeheader()
+
+    def delete3(self,path):
+        os.remove(path)
+
+    def isHeader(self,data_store):
+        for i in self.meta_data:
+            if (i.__eq__(data_store[i])):
+                return False
+        return True
+
 
 def main():
   meta_data = ["Name","Age"]
   test_data = ["Subhankar","25"]
   test_data1 = ["Subhankar","19"]
-  test_data2 = ["Subhankar","23"]
+  test_data2 = ["Tanir","23"]
   test_data3 = ["Subhankar","36"]
   path = "D:\Test.txt"
   print("\nFile-Created")
@@ -100,8 +134,13 @@ def main():
   Create(meta_data,path,test_data2).create()
   Create(meta_data,path,test_data3).create()
   print("\nReading specific")
-  Read(meta_data,path).read1(1,"Subhankar")
+  Read(meta_data,path).read1(1,"Tanir")
   print("\nReading All")
+  Read(meta_data,path).read2()
+  filter_path = "D:\Filter.txt"
+  print("\nDeletion specific")
+  Delete(meta_data,path,filter_path).delete1(2,"19")
+  print("Read All")
   Read(meta_data,path).read2()
 
 main()
