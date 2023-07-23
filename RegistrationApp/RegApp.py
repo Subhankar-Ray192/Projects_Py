@@ -14,8 +14,22 @@ from PIL import Image,ImageTk
 mKey = "123"
 policy = "\nWe at our company respect the privacy of our registered candidates." + "\nWe assure you that your personal information shall not be misused." + "\nWe can guarantee safety of data incase of third party data breach."
 
-preDefinedFilePath = "D:\\DataFolder\\Data.csv"
-preDefinedDirPath = "D:\\DataFolder"
+driver_list = ["B:\\","D:\\","A:\\","C:\\"]
+
+def Driver():
+    status_flag = False
+    drive = ""
+    for i in driver_list:
+        if(os.path.exists(i)):
+            drive = drive + i
+            status_flag = os.path.exists(i)
+            break
+    if(status_flag):
+        return drive
+    return "D:\\"
+
+preDefinedFilePath = Driver()+"DataFolder\\Data.csv"
+preDefinedDirPath = Driver()+"DataFolder"
 
 windObj = Tk()
 colorPalette = ["#ffffff", "#fc6405", "#000000", "#fd9350","#808080"]
