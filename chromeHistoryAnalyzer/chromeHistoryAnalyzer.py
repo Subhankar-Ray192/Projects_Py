@@ -24,7 +24,8 @@ tz = 9
 dt_To = datetime.now()
 dt_From = datetime.now()-timedelta(days=dayFactor*numberOfYrs)
 
-browserPath = "C:\\Users\\SUBHANKAR\\AppData\\Local\Google\\Chrome\\User Data\\Default\\History"
+user_name = str(input("\nUsername:"))
+browserPath = "C:\\Users\\" + user_name + "\\AppData\\Local\Google\\Chrome\\User Data\\Default\\History"
 
 directoryPath = "History_Analyzer"
 tempPath = "\\chrome_historySS"
