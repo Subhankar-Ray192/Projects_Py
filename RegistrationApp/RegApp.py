@@ -10,6 +10,7 @@ from tkinter import simpledialog
 from tkinter import ttk
 from PIL import Image,ImageTk
 
+#Global Data
 mKey = "123"
 policy = "\nWe at our company respect the privacy of our registered candidates." + "\nWe assure you that your personal information shall not be misused." + "\nWe can guarantee safety of data incase of third party data breach."
 
