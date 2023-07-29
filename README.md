@@ -24,3 +24,8 @@ SL No| Name | OS
 If you need any assistance for running the executable please refer to their respective manuals given in the directory
 
 # Manual
+
+# License
+
+# Bug-Report
+
