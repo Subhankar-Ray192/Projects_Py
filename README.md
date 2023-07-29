@@ -14,6 +14,7 @@ SL No| Name | Type | OS | Description
 This directory supports all the binary executables which you can install in your machine and run without the hassle of running and installing the neccessary files needed to run the source code.If you need any assistance for running the executable please refer to their respective manuals given in the directory.
 
 SL No| Name | OS
+-----|------|-------
 1|reg_sheet|Windows
 2|cbh_analyser|Windows
 3|sticky_note|Windows
