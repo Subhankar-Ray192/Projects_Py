@@ -11,8 +11,7 @@ SL No| Name | Type | OS | Description
 4|wifi_auto|python|Windows|a wifi-automation utility to control wifi related informations
 5|calculator|python|Windows|a simple calculator
 ## Releases
-This directory supports all the binary executables which you can install in your machine and run without the hassle of running and installing the neccessary files needed to run the source code.<br><br>
-If you need any assistance for running the executable please refer to their respective manuals given in the directory.
+This directory supports all the binary executables which you can install in your machine and run without the hassle of running and installing the neccessary files needed to run the source code.
 
 SL No| Name | OS
 -----|------|-------
@@ -21,5 +20,7 @@ SL No| Name | OS
 3|sticky_note|Windows
 4|wifi_auto|Windows
 5|calculator|Windows
+
+If you need any assistance for running the executable please refer to their respective manuals given in the directory
 
 # Manual
