@@ -1,7 +1,7 @@
 # Directories
 
 ## Project
-This directory supports all the source code alongwith their respective code documentation.Please feel free to update any and all source code as you feel free;>
+This directory supports all the source code alongwith their respective code documentation.Please feel free to use any and all source code as you feel free;>
 
 SL No| Name | Type | OS | Description
 -----|------|------|----|-------------
