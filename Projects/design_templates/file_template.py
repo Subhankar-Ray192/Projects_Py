@@ -5,9 +5,9 @@ import sys
 
 class File: 
     class Create:
-        def __init__(self,header,p,dataset):
+        def __init__(self,header,path,dataset):
             self.meta_data = header
-            self.path = p
+            self.path = path
             self.data_store = {}
             self.insertKey()
             self.insertVal(dataset)
@@ -47,9 +47,9 @@ class File:
                 self.write2()
 
     class Read:
-        def __init__(self,hd,p):
-            self.meta_data = hd
-            self.path = p
+        def __init__(self,header,path):
+            self.meta_data = header
+            self.path = path
     
         def read1(self,category_counter,data):
             with open(self.path,"r") as file:
@@ -80,10 +80,10 @@ class File:
             return
 
     class Delete():
-        def __init__(self,hd,p,fp):
-            self.meta_data = hd
-            self.path = p
-            self.filter_path = fp
+        def __init__(self,header,path,filterpath):
+            self.meta_data = header
+            self.path = path
+            self.filter_path = filterpath
             return  
     
         def delete1(self,category_counter,data):
@@ -100,7 +100,7 @@ class File:
                         self.filterWriter(wt_path,self.extractData(entry))
     
         def filterWriter(self,wt_path,dataset):
-            Create(self.meta_data,wt_path,dataset).create()
+            File().Create(self.meta_data,wt_path,dataset).create()
 
         def extractData(self,dataset):
             data = []
