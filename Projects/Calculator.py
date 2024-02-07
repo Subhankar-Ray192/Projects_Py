@@ -1,10 +1,12 @@
 #Calculator
 
 import tkinter as container
+import re
 
 from tkinter import *
 from tkinter.font import Font
 from tkinter import ttk
+
 
 windObj=container.Tk(className="Calculator",useTk=1)
 windObj.title("Calculator")
@@ -159,13 +161,16 @@ class RPN:
   def __init__(self):
    self.tempVar=""
    self.num=[]
+   
+   # Stack object
    self.st=Stack()
 
-  def output(self,e):
-   self.getTokens(e.get()) 
-   #print(self.num)
-   e.delete(0,END)
-   e.insert(0,Evaluation(self.num).result())
+  def output(self,eObj):
+   '''Displays output on the entry'''
+
+   self.getTokens(eObj.get()) 
+   eObj.delete(0,END)
+   eObj.insert(0,Evaluation(self.num).result())
    
 
   def getTokens(self,entry):
