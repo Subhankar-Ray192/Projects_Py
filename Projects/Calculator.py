@@ -28,9 +28,9 @@ class Windows:
    self.height=413
    self.width=428
 
-  #Container_Layout Management Code
   def layout(self):
-   #windObj.geometry("450x400")
+   '''Fixes the Windows Layout'''
+
    windObj.minsize(self.width,self.height)
    windObj.maxsize(self.width,self.height)
    windObj.config(bg=colorPalette[1])
@@ -46,73 +46,106 @@ class Component:
   
   
   def __init__(self):
+   #objF: Frame_Objects List
    self.objF=[] 
   
   
   def frameGen(self):
+   '''Generation of Frames(5)'''
+   
    for i in range(6):
     self.objF.append(Frame(mainFrame,bg=colorPalette[1],highlightbackground=colorPalette[1],highlightthickness=0,width=400,height=80))
   
-  #Input Controller Code
+  
   def entry(self,wd):
+   '''Places Entry Objects on Window Grid Layout'''
+   
+   #eObj: Entry Object
    global eObj
+   
+   #Object: Created
    eObj=Entry(self.objF[0],width=wd,borderwidth=0,font=fontList[1],exportselection=1,bg=colorPalette[1])
    eObj.grid(row=0,column=0,columnspan=4,padx=0,pady=10)
+   
+   #Object: Placed
    self.objF[0].grid(row=0,column=0,columnspan=4)
 
-  #Button Controller Code
+  
+  
   def buttonFrame(self):
+   '''Places Button Object on Child Frames'''
+
+   #obj: Button Object List
    obj=[] 
 
+   #Object->Frame_1: Created
    obj.append(Button(self.objF[1],text=number[0],padx=45,pady=18,command= lambda: self.input(number[0]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[1],text=number[1],padx=45,pady=18,command= lambda: self.input(number[1]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[1],text=number[2],padx=45,pady=18,command= lambda: self.input(number[2]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[1],text=number[9],padx=45,pady=18,command= lambda: self.input(number[9]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    
+   #Object->Frame_2: Created
    obj.append(Button(self.objF[2],text=number[3],padx=45,pady=18,command= lambda: self.input(number[3]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[2],text=number[4],padx=45,pady=18,command= lambda: self.input(number[4]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[2],text=number[5],padx=45,pady=18,command= lambda: self.input(number[5]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[2],text=extraChar[0],padx=45,pady=18,command=lambda: self.clear(),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    
+   #Object->Frame_3: Created
    obj.append(Button(self.objF[3],text=number[6],padx=45,pady=18,command= lambda: self.input(number[6]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[3],text=number[7],padx=45,pady=18,command= lambda: self.input(number[7]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[3],text=number[8],padx=45,pady=18,command= lambda: self.input(number[8]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[3],text=operators[0],padx=45,pady=18,command= lambda: self.input(operators[0]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    
+   #Object->Frame_4: Created
    obj.append(Button(self.objF[4],text=operators[1],padx=45,pady=18,command= lambda: self.input(operators[1]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[4],text=operators[2],padx=45,pady=18,command= lambda: self.input(operators[2]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[4],text=operators[3],padx=47,pady=18,command= lambda: self.input(operators[3]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[4],text=extraChar[1],padx=45,pady=18,command= lambda: RPN().output(eObj),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    
+   #Object->Frame_5: Created
    obj.append(Button(self.objF[5],text=extraChar[2],padx=47,pady=18,command=lambda: self.input(extraChar[2]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))   
    obj.append(Button(self.objF[5],text=extraChar[3],padx=47,pady=18,command=lambda: self.input(extraChar[3]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[5],text=operators[4],padx=43,pady=18,command= lambda: self.input(operators[4]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[5],text=extraChar[4],padx=45,pady=18,command=lambda: self.cross(),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))   
-   t=1
+   
+   #Button Object List Pointer
+   bObj_ptr=1
+   
+   #Object: Placed
    for i in range(5):
      for j in range(4):
-       obj[t-1].grid(row=0,column=j)
-       t=t+1
+       obj[bObj_ptr-1].grid(row=0,column=j)
+       bObj_ptr=bObj_ptr+1
      self.objF[i+1].grid(row=(i+1),column=0,columnspan=3,sticky=W)
+   
+   #Grid placed on Main Frame
    mainFrame.grid(row=1,column=0,columnspan=3,rowspan=6)
    
   def clear(self):
+   '''Clearing Entry Text'''
+   
    eObj.delete(0,END)  
   
   def keyControls(self):
    windObj.bind("<Control-x>",lambda event: self.cross())
   
-  def input(self,t):
-   current=str(eObj.get())
+  def input(self,prev_txt):
+   '''Gettting Text Input from Entry Object'''
+   
+   curr_txt=str(eObj.get())
    self.clear() 
-   eObj.insert(0,current+t)
+   eObj.insert(0,curr_txt+prev_txt)
 
   def cross(self):
-   current=str(eObj.get())[:-1]
-   eObj.delete(0,END)
-   eObj.insert(0,current)
+   '''Deleted 1 Character in Reverse from Text'''
+   
+   curr_txt=str(eObj.get())[:-1]
+   self.clear()
+   eObj.insert(0,curr_txt)
     
   def compEvent(self):
+   '''Main Controller Event for Layout, Calling each function'''
+   
    self.frameGen()
    self.entry(40)
    self.buttonFrame()
