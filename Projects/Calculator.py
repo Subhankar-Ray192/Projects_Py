@@ -159,175 +159,78 @@ class Component:
 class RPN:
 
   def __init__(self):
-   self.tempVar=""
-   self.num=[]
-   
-   # Stack object
-   self.st=Stack()
+   self.curr_pos=0
+   self.curr_token=None
+   self.result=0
 
   def output(self,eObj):
    '''Displays output on the entry'''
 
    self.getTokens(eObj.get()) 
    eObj.delete(0,END)
-   eObj.insert(0,Evaluation(self.num).result())
+   eObj.insert(0,self.result)
    
-
   def getTokens(self,entry):
-   self.parser("(")
-   for i in entry:
-     self.parser(i)
-   self.parser(")")
+   '''Digit,Operator,Parenthesis extraction'''
    
+   entry = re.findall(r'\d+|\+|\-|\*|\/|\(|\)', entry)
+   self.result = self.token_E(entry)
 
-  def parser(self,x):
-   if(not self.isWhiteSpace(x)):
-     if(self.isPrecedence(x)==1):
-        self.tempVar=self.tempVar+x
-     elif(self.isPrecedence(x)==5):
-       self.st.push(x)
-     elif(self.isPrecedence(x)==4):
-       if(not self.isNull()):
-        self.num.append(self.tempVar)
-        self.tempVar=""
-       if(self.isLowerPrecedence(self.st,x)):
-         self.num.append(self.st.delete())
-         self.st.push(x)
-       else:
-         self.st.push(x)
-     elif(self.isPrecedence(x)==3):
-       if(not self.isNull()):
-        self.num.append(self.tempVar)
-        self.tempVar=""
-       if(self.isLowerPrecedence(self.st,x)):
-         self.num.append(self.st.delete())
-         self.st.push(x)
-       else:
-         self.st.push(x)
-     else:
-       if(not self.isNull()):
-        self.num.append(self.tempVar)
-        self.tempVar=""
-       self.remove()
-
-  def isNull(self):
-   if(self.tempVar==""):
-       return True
-   return False
-  
-  def isWhiteSpace(self,x):
-    if(x==" "):
-     return True
-    return False
-  
-  def isLowerPrecedence(self,st,x):
-    if((self.isPrecedence(st.peek())>=self.isPrecedence(x))and(st.peek()!='(')):
-     return True
-    return False
-
-  def remove(self):
-   while((self.st.peek()!=('('))or(self.st.isEmpty())):
-     #print(self.st.peek())
-     self.num.append(self.st.delete())
-   #print(self.st.delete())
-  
-  def isPrecedence(self,x):
-    if(x=='('):
-     return 5
-    elif((x==operators[1])or(x==operators[0])or(x==operators[4])):
-     return 4
-    elif((x==operators[2])or(x==operators[3])):
-     return 3
-    elif(x==')'):
-     return 2
+  def token_E(self,token):
+   '''Expression Evaluation'''
+   
+   self.curr_token = token[self.curr_pos]
+   result = self.token_T(token)
+   
+   while(self.curr_token in ("-","+")):
+    
+    opt_ptr = self.curr_token
+    self.consume_token(token)
+    term = self.token_F(token)
+    
+    if(opt_ptr == "+"):
+      result += term
     else:
-     return 1
-
-
-class Error:
+      result -= term
+   
+   return result 
   
-  def mathError(self,exp):
-   exp.clear()
-   exp.append("NaN")
+  def token_T(self,token):
+   '''Term Evaluation'''
+   result = self.token_F(token)
+   
+   while(self.curr_token in ("/","*","%")):
+    
+    opt_ptr = self.curr_token
+    self.consume_token(token)
+    factor = self.token_T(token)
+    
+    if(opt_ptr == "/"):
+      result /= factor
+    elif(opt_ptr == "%"):
+      result %= factor
+    else:
+      result *= factor
+   
+   return result 
 
-  def ioError(self,x):
-   try:
-    return float(x)
-   except:
-    return int(x)
-
-class Evaluation:
-  
-  def __init__(self,num):
-    self.exp=num
-    self.err=Error()
-
-  def isOperator(self,i):
-     tempC=0
-     for j in operators:
-        if(i==j):
-          return tempC
-        tempC=tempC+1
- 
-  def result(self):
-    i=0
-    while(len(self.exp)>1):
-        if(self.isOperator(self.exp[i])==0):
-          try:
-           self.exp[i-2]=str((self.err.ioError(self.exp[i-2]))/(self.err.ioError(self.exp[i-1])))
-           self.cleanUp(i)
-          except:
-           self.err.mathError(self.exp)
-           break
-          i=0
-        elif(self.isOperator(self.exp[i])==1):
-          self.exp[i-2]=str((self.err.ioError(self.exp[i-2]))*(self.err.ioError(self.exp[i-1])))
-          self.cleanUp(i)
-          i=0
-        elif(self.isOperator(self.exp[i])==2):
-          self.exp[i-2]=str((self.err.ioError(self.exp[i-2]))+(self.err.ioError(self.exp[i-1])))
-          self.cleanUp(i)
-          i=0
-        elif(self.isOperator(self.exp[i])==3):
-          self.exp[i-2]=str((self.err.ioError(self.exp[i-2]))-(self.err.ioError(self.exp[i-1])))
-          self.cleanUp(i)
-          i=0
-        elif(self.isOperator(self.exp[i])==4):
-          self.exp[i-2]=str((self.err.ioError(self.exp[i-2]))%(self.err.ioError(self.exp[i-1])))
-          self.cleanUp(i)
-          i=0
-        i=i+1
-    return self.exp
-
-  def cleanUp(self,i):
-   self.exp.pop(i)
-   self.exp.pop(i-1)
-
-class Stack:
-  
-  def __init__(self):
-   self.stk=[]
-   self.top=-1
-
-  def push(self,x):
-   self.top=self.top+1
-   self.stk.append(x)
-
-  def delete(self):
-   if(self.isEmpty()):
-     return "Error"
-   self.top=self.top-1
-   return self.stk.pop()
-
-  def peek(self):
-   if(self.isEmpty()):
-     return "Error"
-   return self.stk[self.top]
-  
-  def isEmpty(self):
-   if(self.top<0):
-    return True
-   return False
+  def token_F(self,token):
+    '''Factor Evaluation'''
+    
+    if(self.curr_token == "("):
+     self.consume_token(token)
+     result=self.token_E(token)
+     self.consume_token(token)
+    else:
+     result = int(self.curr_token)
+     self.consume_token(token)
+    
+    return result
+   
+  def consume_token(self, token):
+    self.curr_pos += 1
+    if self.curr_pos < len(token):
+       self.curr_token = token[self.curr_pos]
   
 class Menu:
   
