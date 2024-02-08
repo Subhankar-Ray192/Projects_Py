@@ -23,6 +23,7 @@ fontList=[(Font(family="Calibri",size=12)),(Font(family="Calibri",size=15)),(Fon
 mainFrame=Frame(windObj,bg=colorPalette[1],highlightbackground=colorPalette[1],highlightthickness=0,height=542,width=402)
 menuFrame=Frame(windObj,bg=colorPalette[1],highlightbackground=colorPalette[1],highlightthickness=0,height=30,width=4010)
 
+
 class Windows:
  
   
@@ -102,7 +103,7 @@ class Component:
    obj.append(Button(self.objF[4],text=operators[1],padx=45,pady=18,command= lambda: self.input(operators[1]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[4],text=operators[2],padx=45,pady=18,command= lambda: self.input(operators[2]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    obj.append(Button(self.objF[4],text=operators[3],padx=47,pady=18,command= lambda: self.input(operators[3]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
-   obj.append(Button(self.objF[4],text=extraChar[1],padx=45,pady=18,command= lambda: RPN().output(eObj),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
+   obj.append(Button(self.objF[4],text=extraChar[1],padx=45,pady=18,command= lambda: Evaluator().output(eObj),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))
    
    #Object->Frame_5: Created
    obj.append(Button(self.objF[5],text=extraChar[2],padx=47,pady=18,command=lambda: self.input(extraChar[2]),bg=colorPalette[1],activebackground=colorPalette[2],font=fontList[0],relief=GROOVE))   
@@ -154,9 +155,7 @@ class Component:
    self.keyControls()
 
 
-
-
-class RPN:
+class Evaluator:
 
   def __init__(self):
    self.curr_pos=0
@@ -250,12 +249,9 @@ class Menu:
     menuFrame.grid(row=0,column=2,columnspan=3)
     
 
-def mainWindow():
+if __name__=="__main__":
  Windows().layout() 
  Windows().mainkeyControls()
  Menu().menuEvent()
  Component().compEvent()
  windObj.mainloop()
-
-
-mainWindow()
