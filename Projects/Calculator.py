@@ -1,4 +1,4 @@
-#Calculator
+# -*- coding: utf-8 -*-
 
 import tkinter as container
 import re
